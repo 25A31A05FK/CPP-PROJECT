@@ -1,0 +1,82 @@
+step 1. **Input the Password**
+
+   * Read the password string `P` from the user.
+
+step 2. **Measure Length**
+
+   * Calculate the length of the password.
+   * Longer passwords are generally more secure.
+
+step 3. **Identify Character Types**
+   Go through each character in the password and check if it contains:
+
+   * Lowercase letters (a–z)
+   * Uppercase letters (A–Z)
+   * Digits (0–9)
+   * Special symbols (e.g., @, #, $, etc.
+
+step 4. **Determine Character Set Size**
+   Based on the detected character types:
+
+   * Add 26 if lowercase is present
+   * Add 26 if uppercase is present
+   * Add 10 if digits are present
+   * Add ~32 if symbols are present
+
+
+step 5. **Calculate Possible Combinations**
+
+   * Use the formula:
+
+     ```
+     Total Combinations = (Character Set Size) ^ (Password Length)
+     ```
+
+   * This assumes **repetition is allowed**, meaning characters can repeat.
+
+
+step 6. **Estimate Entropy**
+
+   * Convert the combinations into entropy:
+
+     ```
+     Entropy = Length × log₂(Character Set Size)
+     ```
+
+   * Higher entropy means the password is harder to guess.
+
+step 7. **Check for Weak Patterns**
+   Reduce strength if:
+
+   * Password is very short
+   * Contains repeated characters (e.g., "aaa", "111")
+   * Contains sequences (e.g., "abc", "123")
+   * Matches common passwords (e.g., "password", "123456")
+
+step 8. **Score the Password**
+
+   * Add points for:
+
+     * Longer length
+     * More character variety
+   * Subtract points for:
+
+     * Patterns
+     * Common or predictable passwords
+
+step 9. **Classify Strength**
+   Based on the final score, classify the password as:
+
+   * Very Weak
+   * Weak
+   * Medium
+   * Strong
+   * Very Strong
+
+step 10. **Provide Feedback**
+    Suggest improvements such as:
+
+* Increase length
+* Add uppercase, digits, or symbols
+* Avoid sequences and repeated characters
+* Avoid common passwords
