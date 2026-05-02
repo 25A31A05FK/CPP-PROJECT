@@ -1,0 +1,108 @@
+#include <iostream>
+#include <cmath>
+#include <unordered_set>
+#include <algorithm>
+using namespace std;
+
+
+unordered_set<string> commonPasswords = {
+    "password", "123456", "123456789", "qwerty", "abc123",
+    "password123", "admin", "letmein", "welcome"
+};
+
+
+struct CharTypes {
+    bool lower = false;
+    bool upper = false;
+    bool digit = false;
+    bool symbol = false;
+};
+
+
+bool hasSequence(const string &s) {
+    for (int i = 0; i < s.length() - 2; i++) {
+        if ((s[i]+1 == s[i+1] && s[i]+2 == s[i+2]) ||
+            (s[i]-1 == s[i+1] && s[i]-2 == s[i+2])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+bool hasRepetition(const string &s) {
+    for (int i = 0; i < s.length() - 2; i++) {
+        if (s[i] == s[i+1] && s[i] == s[i+2]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+double calculateEntropy(int charsetSize, int length) {
+    return length * log2(charsetSize);
+}
+
+int main() {
+    string password;
+    cout << "Enter password: ";
+    cin >> password;
+
+    int length = password.length();
+    CharTypes types;
+
+    for (char c : password) {
+        if (islower(c)) types.lower = true;
+        else if (isupper(c)) types.upper = true;
+        else if (isdigit(c)) types.digit = true;
+        else types.symbol = true;
+    }
+    int charsetSize = 0;
+    if (types.lower) charsetSize += 26;
+    if (types.upper) charsetSize += 26;
+    if (types.digit) charsetSize += 10;
+    if (types.symbol) charsetSize += 32;
+
+ 
+    double entropy = calculateEntropy(charsetSize, length);
+
+
+    int score = 0;
+
+
+    if (length >= 12) score += 3;
+    else if (length >= 8) score += 2;
+    else score += 1;
+
+    score += types.lower + types.upper + types.digit + types.symbol;
+
+
+    if (commonPasswords.count(password)) score -= 5;
+    if (hasSequence(password)) score -= 2;
+    if (hasRepetition(password)) score -= 2;
+
+
+    cout << "\n--- Password Analysis ---\n";
+    cout << "Length: " << length << endl;
+    cout << "Charset Size: " << charsetSize << endl;
+    cout << "Estimated Entropy: " << entropy << " bits\n";
+    cout << "Strength: ";
+    if (score <= 2) cout << "Very Weak\n";
+    else if (score <= 4) cout << "Weak\n";
+    else if (score <= 6) cout << "Medium\n";
+    else if (score <= 8) cout << "Strong\n";
+    else cout << "Very Strong\n";
+
+    cout << "\n--- Suggestions ---\n";
+    if (length < 12) cout << "- Use at least 12 characters\n";
+    if (!types.upper) cout << "- Add uppercase letters\n";
+    if (!types.lower) cout << "- Add lowercase letters\n";
+    if (!types.digit) cout << "- Include digits\n";
+    if (!types.symbol) cout << "- Use special characters\n";
+    if (hasSequence(password)) cout << "- Avoid sequences (abc, 123)\n";
+    if (hasRepetition(password)) cout << "- Avoid repeated characters\n";
+    if (commonPasswords.count(password)) cout << "- Avoid common passwords\n";
+
+    return 0;
+}
